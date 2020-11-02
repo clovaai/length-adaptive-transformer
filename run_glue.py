@@ -190,8 +190,8 @@ def main():
     if search_args.do_search:
         model.config.output_attentions = True
 
-    assert not (length_drop_args.length_config and length_drop_args.slimmable)
-    if length_drop_args.slimmable or search_args.do_search:
+    assert not (length_drop_args.length_config and length_drop_args.length_adaptive)
+    if length_drop_args.length_adaptive or search_args.do_search:
         training_args.max_seq_length = data_args.max_seq_length
 
     # Initialize our Trainer

@@ -255,7 +255,7 @@ def train(args, train_dataset, model, tokenizer):
             task_loss = div_loss(outputs[0], args)
             loss_sum["full"] += task_loss.item()
             loss = task_loss
-            if args.slimmable:
+            if args.length_adaptive:
                 loss = loss / (args.num_sandwich + 2)
 
             tr_loss_sum += loss.item()
@@ -266,7 +266,7 @@ def train(args, train_dataset, model, tokenizer):
                 loss.backward()
 
             # inplace distillation
-            if args.slimmable:
+            if args.length_adaptive:
                 start_logits = outputs[1].detach()
                 end_logits = outputs[2].detach()
 
@@ -898,8 +898,8 @@ def main():
 
     if args.length_config is not None:
         args.length_config = eval(args.length_config)
-    assert not (args.length_config and args.slimmable)
-    if args.slimmable or args.do_search:
+    assert not (args.length_config and args.length_adaptive)
+    if args.length_adaptive or args.do_search:
         args.max_seq_length = args.max_seq_length
 
     logger.info("Training/evaluation parameters %s", args)
